@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+	<_name>X-Plotter Control</_name>
+	<id>com.p-robots.xplotter.rev010</id>
+	<dependency type="extension">org.inkscape.output.svg.inkscape</dependency>
+	<dependency type="executable" location="extensions">xplotter.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name="tab" type="notebook">
+
+
+		<page name="plot" _gui-text="Plot">
+			<_param indent="1" name="plotpage1" type="description" appearance="header">
+Welcome to the X-Plotter interface!
+			</_param>
+			
+			<_param indent="2" name="plotpage2" type="description" xml:space="preserve" >
+	Press 'Apply' to begin plotting.
+
+	Or,look in the other tabs to adjust your settings	
+	and use additional X-Plotter functions.
+
+	Need help? Visit http://p-robots.com/docs
+			</_param>
+		</page>
+
+
+
+		<page name="setup" _gui-text="Setup">
+			<param indent="1" name="penUpPosition" type="int" min="90" max ="160" appearance="full" _gui-text="Pen up position:">160</param>
+			<param indent="1" name="penDownPosition" type="int" min="90" max ="160" appearance="full" _gui-text="Pen down position:">140</param>
+			<param indent="1" name="travellingSpeed" type="int" min="0" max ="200" appearance="full" _gui-text="Travelling speed:">50</param>			
+		</page>	
+
+	</param>
+
+
+	<effect needs-live-preview="false" needs-document="no">
+		<object-type>all</object-type>
+		<effects-menu>
+			<submenu _name="X-Plotter"/>
+		</effects-menu>
+	</effect>
+
+	<script>
+		<command reldir="extensions" interpreter="python">xplotter.py</command>
+	</script>
+
+</inkscape-extension>
+
