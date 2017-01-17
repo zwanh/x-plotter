@@ -1,13 +1,3 @@
-# plot_utils.py
-# Common geometric plotting utilities for EiBotBoard
-# https://github.com/evil-mad/plotink
-# 
-# Intended to provide some common interfaces that can be used by 
-# EggBot, WaterColorBot, AxiDraw, and similar machines.
-#
-# Version 0.5, Dated October 29, 2016.
-#
-#
 # The MIT License (MIT)
 # 
 # Copyright (c) 2016 Evil Mad Scientist Laboratories
@@ -37,7 +27,7 @@ from bezmisc import *
 def version():
 	return "0.5"	# Version number for this document
 
-pxPerInch = 90.0	# 90 px per inch, as of Inkscape 0.91
+pxPerMillimeter = 3.54	# 90 px per inch, as of Inkscape 0.92
 					# Note that the SVG specification is for 96 px per inch; 
 					# Expect a change to 96 as of Inkscape 0.92.
 
@@ -89,42 +79,6 @@ def parseLengthWithUnits(str):
 	return v, u
 
 
-def getLength(altself, name, default):
-	'''
-	Get the <svg> attribute with name "name" and default value "default"
-	Parse the attribute into a value and associated units.  Then, accept
-	no units (''), units of pixels ('px'), and units of percentage ('%').
-	Return value in px.
-	'''
-	str = altself.document.getroot().get(name)
-
-	if str:
-		v, u = parseLengthWithUnits(str)
-		if not v:
-			# Couldn't parse the value
-			return None
-		elif (u == '') or (u == 'px'):
-			return v
-		elif  u == 'in' :
-			return (float(v) * pxPerInch)		
-		elif u == 'mm':
-			return (float(v) * pxPerInch / 25.4)
-		elif u == 'cm':
-			return (float(v) * pxPerInch / 2.54)
-		elif u == 'Q':
-			return (float(v) * pxPerInch / (40.0 * 2.54))
-		elif u == 'pc':
-			return (float(v) * pxPerInch / 6.0)
-		elif u == 'pt':
-			return (float(v) * pxPerInch / 72.0)
-		elif u == '%':
-			return float(default) * v / 100.0
-		else:
-			# Unsupported units
-			return None
-	else:
-		# No width specified; assume the default value
-		return float(default)
 
 def getLengthInches(altself, name):
 	'''
@@ -154,6 +108,37 @@ def getLengthInches(altself, name):
 		else:
 			# Unsupported units
 			return None
+
+
+def getLengthMillimeters(altself, name):
+	'''
+	Get the <svg> attribute with name "name" and default value "default"
+	Parse the attribute into a value and associated units.  Then, accept
+	units of inches ('in'), millimeters ('mm'), or centimeters ('cm')
+	Return value in millimeters.
+	'''
+	str = altself.document.getroot().get(name)
+	if str:
+		v, u = parseLengthWithUnits(str)
+		if not v:
+			# Couldn't parse the value
+			return None
+		elif u == 'mm':
+			return v
+		elif  u == 'in' :
+			return (float(v) * 25.4)
+		elif u == 'cm':
+			return (float(v) * 10)
+		elif u == 'Q':
+			return (float(v) / 4.0)
+		elif u == 'pc':
+			return (float(v) * 25.4 / 6.0)	
+		elif u == 'pt':
+			return (float(v) * 25.4 / 72.0)
+		else:
+			# Unsupported units
+			return None
+
 
 def subdivideCubicPath( sp, flat, i=1 ):
 	"""

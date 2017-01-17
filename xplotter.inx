@@ -27,8 +27,8 @@ Welcome to the X-Plotter interface!
 
 		<page name="setup" _gui-text="Setup">
 			<param indent="1" name="penUpPosition" type="int" min="90" max ="160" appearance="full" _gui-text="Pen up position:">160</param>
-			<param indent="1" name="penDownPosition" type="int" min="90" max ="160" appearance="full" _gui-text="Pen down position:">140</param>
-			<param indent="1" name="travellingSpeed" type="int" min="0" max ="200" appearance="full" _gui-text="Travelling speed:">50</param>			
+			<param indent="1" name="penDownPosition" type="int" min="90" max ="160" appearance="full" _gui-text="Pen down position:">150</param>
+			<param indent="1" name="travellingSpeed" type="int" min="0" max ="50000" appearance="full" _gui-text="Travelling speed:">2000</param>			
 		</page>	
 
 	</param>

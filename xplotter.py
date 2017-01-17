@@ -48,12 +48,12 @@ class XPER(inkex.Effect):
 		
 		self.OptionParser.add_option("--penDownPosition",
 			action="store", type="int",
-			dest="penDownPosition", default=140,
+			dest="penDownPosition", default=150,
 			help="Position of pen for painting")
 		
 		self.OptionParser.add_option("--travellingSpeed",
 			action="store", type="int",
-			dest="travellingSpeed", default=50,
+			dest="travellingSpeed", default=2000,
 			help="speed for painting")
 
 		self.svgHeight = 0
@@ -87,15 +87,13 @@ class XPER(inkex.Effect):
 			inkex.errormsg("Failed to connect to X-plotter!!!")
 		
 		if self.options.tab == '"plot"':
-			xplotter_serial.command(self.serialPort, 'G20')
 			self.svgLayer = 12345
 			self.plotDocument()
 			xplotter_motion.setPenPos(self.serialPort, 150)
-			xplotter_motion.doTimedPause(self.serialPort, 1000)
-			self.plotSegment(0.4, 0.4)	
+			xplotter_motion.doTimedPause(self.serialPort, 250)
+			self.plotSegment(10, 10)	
 		
 		elif self.options.tab == '"setup"':
-			xplotter_serial.command(self.serialPort, 'G20')
 			self.testPenPos()
 		
 		if self.serialPort is not None:
@@ -129,7 +127,7 @@ class XPER(inkex.Effect):
 				sx = self.svgWidth / float(vinfo[2])
 				sy = self.svgHeight / float(vinfo[3])
 			else:
-				sx = 1.0 / float(plot_utils.pxPerInch)
+				sx = 1.0 / float(plot_utils.pxPerMillimeter)
 				sy = sx
 				offsetx = 0.0
 				offsety = 0.0
@@ -147,8 +145,8 @@ class XPER(inkex.Effect):
 		Use a default value in case the property is not present or is 
 		expressed in units of percentages
 		"""
-		self.svgHeight = plot_utils.getLengthInches(self, 'height')
-		self.svgWidth = plot_utils.getLengthInches(self, 'width')
+		self.svgHeight = plot_utils.getLengthMillimeters(self, 'height')
+		self.svgWidth = plot_utils.getLengthMillimeters(self, 'width')
 		if(self.svgHeight == None) or (self.svgWidth == None):
 			return False
 		else:
@@ -538,12 +536,12 @@ class XPER(inkex.Effect):
 						
 						if nIndex == 0:
 							if (plot_utils.distance(fX-self.fCurrX, fY-self.fCurrY) > xplotter_conf.MIN_GAP):
-								xplotter_motion.setPenPos(self.serialPort, 150)
-								xplotter_motion.doTimedPause(self.serialPort, 1000)
+								xplotter_motion.setPenPos(self.serialPort, self.options.penUpPosition)
+								xplotter_motion.doTimedPause(self.serialPort, 250)
 						
 						elif nIndex == 1:
-							xplotter_motion.setPenPos(self.serialPort, 100)
-							xplotter_motion.doTimedPause(self.serialPort, 1000)
+							xplotter_motion.setPenPos(self.serialPort, self.options.penDownPosition)
+							xplotter_motion.doTimedPause(self.serialPort, 250)
 						
 						nIndex += 1
 						
@@ -568,13 +566,13 @@ class XPER(inkex.Effect):
 		xplotter_motion.doXYMove(self.serialPort, xDest, yDest, self.options.travellingSpeed)			
 
 	def testPenPos(self):
-		self.plotSegment(1,1)
+		self.plotSegment(10, 10)
 		xplotter_motion.setPenPos(self.serialPort, self.options.penDownPosition)
-		xplotter_motion.doTimedPause(self.serialPort, 500)
-		self.plotSegment(2,2)
+		xplotter_motion.doTimedPause(self.serialPort, 250)
+		self.plotSegment(20, 20)
 		xplotter_motion.setPenPos(self.serialPort, self.options.penUpPosition)
-		xplotter_motion.doTimedPause(self.serialPort, 500)
-		self.plotSegment(1,1)
+		xplotter_motion.doTimedPause(self.serialPort, 250)
+		self.plotSegment(10, 10)
 		
 
 

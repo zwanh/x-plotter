@@ -1,13 +1,3 @@
-# ebb_motion.py
-# Motion control utilities for EiBotBoard
-# https://github.com/evil-mad/plotink
-# 
-# Intended to provide some common interfaces that can be used by 
-# EggBot, WaterColorBot, AxiDraw, and similar machines.
-#
-# Version 0.6, Dated April 2, 2016.
-#
-#
 # The MIT License (MIT)
 # 
 # Copyright (c) 2016 Evil Mad Scientist Laboratories

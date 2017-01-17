@@ -20,10 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 import inkex
 import serial
 import gettext
 import time
+
 
 def findPort():
 	try:
@@ -40,7 +42,7 @@ def findPort():
 			if port[1].startswith("USB2.0-Serial"):
 				xplotterPort = port[0]
 				break				# break when done
-		if xplotterPort is not None:
+		if xplotterPort is None:
 			for port in comPortsList:
 				if port[2].startswith("USB VID:PID=1A86:7523"):
 					xplotterPort = port[0]
@@ -51,13 +53,20 @@ def testPort(comPort):
 	if comPort is not None:
 		try:
 			serialPort = serial.Serial(comPort, 115200, timeout=1)
-			time.sleep(5)
-			serialPort.reset_input_buffer()
-			serialPort.write("\x18\x0A")
-			strFirmware = serialPort.readline()
-			if strFirmware and strFirmware.startswith('Grbl'):
+			time.sleep(1)
+			if serial.VERSION.startswith('3'):
 				serialPort.reset_input_buffer()
-				return serialPort
+			else :
+				serialPort.flushInput()
+			for i in range(10):
+				serialPort.write("\x18\x0A")
+				strFirmware = serialPort.readline()
+				if strFirmware and strFirmware.startswith('PR'):
+					if serial.VERSION.startswith('3'):
+						serialPort.reset_input_buffer()
+					else :
+						serialPort.flushInput()
+					return serialPort
 			serialPort.close()
 		except serial.SerialException:
 			pass
